@@ -1,6 +1,8 @@
+import 'package:crafty_bay/presentation/ui/screens/category_list_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import '../widget/home/appbar_icon.dart';
 import '../widget/home_banner_slider.dart';
 import '../widget/home/horizontal_category_product_list.dart';
@@ -90,7 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         SectionHeader(
           title: 'Category',
-          onTap: () {},
+          onTap: () {
+            Get.to(()=>const CategoryListScreen());
+          },
         ),
         const SizedBox(
           height: 120,
@@ -104,11 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       title: SvgPicture.asset(AssetsPath.appLogoNav),
       actions: [
-        AppbarIcon(ontap: () {}, iconData: Icons.person),
+        AppbarIcon(onTap: () {}, iconData: Icons.person),
         const SizedBox(width: 8),
-        AppbarIcon(ontap: () {}, iconData: Icons.call),
+        AppbarIcon(onTap: () {}, iconData: Icons.call),
         const SizedBox(width: 8),
-        AppbarIcon(ontap: () {}, iconData: Icons.notifications_active_outlined),
+        AppbarIcon(onTap: () {}, iconData: Icons.notifications_active_outlined),
       ],
     );
   }

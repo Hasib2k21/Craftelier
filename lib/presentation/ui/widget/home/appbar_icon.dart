@@ -2,19 +2,19 @@
 import 'package:flutter/material.dart';
 
 class AppbarIcon extends StatelessWidget {
-  final VoidCallback ontap;
+  final VoidCallback onTap;
   final IconData iconData;
 
   const AppbarIcon({
     super.key,
-    required this.ontap,
+    required this.onTap,
     required this.iconData,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ontap,
+      onTap: onTap,
       child: CircleAvatar(
         radius: 16,
         backgroundColor: Colors.grey.shade200,

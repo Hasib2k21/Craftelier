@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/app_colors.dart';
@@ -35,7 +34,7 @@ class ProductCard extends StatelessWidget {
                     fit: BoxFit.scaleDown),
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(8.0),
               child: Column(
                 children: [

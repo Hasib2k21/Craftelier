@@ -1,3 +1,4 @@
+import 'package:crafty_bay/presentation/state_holders/bottom_navbar_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/category_list_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/assets_path.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SectionHeader(
           title: 'Category',
           onTap: () {
-            Get.to(()=>const CategoryListScreen());
+            Get.find<BottomNavbarController>().selectCategory();
           },
         ),
         const SizedBox(

@@ -123,6 +123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  item_count_number_button:
+    dependency: "direct main"
+    description:
+      name: item_count_number_button
+      sha256: b83ce20dd013e3004bb66a0f4240d20b392d9bcf43dbbea1ce03b3220eee6a13
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.9.2"
   leak_tracker:
     dependency: transitive
     description:
@@ -211,6 +219,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.1"
+  readmore:
+    dependency: "direct main"
+    description:
+      name: readmore
+      sha256: e8fca2bd397b86342483b409e2ec26f06560a5963aceaa39b27f30722b506187
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

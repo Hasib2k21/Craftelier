@@ -95,7 +95,7 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
   }
   ListTile review() {
     return  ListTile(
-      title: Row(
+      title: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           CircleAvatar(
@@ -115,12 +115,12 @@ class _ProductReviewsScreenState extends State<ProductReviewsScreen> {
         ],
       ),
       subtitle: Padding(
-        padding: EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 10),
         child: Text(
           '''Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.''',style: Theme.of(context).textTheme.bodySmall,
         ),
       ),
-      subtitleTextStyle: TextStyle(
+      subtitleTextStyle: const TextStyle(
         fontSize: 14,
       ),
     );

@@ -1,13 +1,8 @@
-
-import 'package:crafty_bay/presentation/ui/utils/assets_path.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../state_holders/bottom_navbar_controller.dart';
 import '../utils/app_colors.dart';
 import '../widget/cart_item_widget.dart';
-import '../widget/product_card.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});

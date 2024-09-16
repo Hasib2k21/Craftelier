@@ -1,7 +1,10 @@
+import 'package:crafty_bay/presentation/ui/screens/review_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
 import 'package:crafty_bay/presentation/ui/widget/product_image_slider.dart';
 import 'package:crafty_bay/presentation/ui/widget/size_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 import 'package:readmore/readmore.dart';
 import '../widget/color_picker.dart';
@@ -129,7 +132,7 @@ class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
         const SizedBox(
           width: 8,
         ),
-        TextButton(onPressed: () {}, child: const Text('Reviews')),
+        TextButton(onPressed: () {Get.to(()=>ProductReviewsScreen());}, child: const Text('Reviews')),
         const SizedBox(
           width: 8,
         ),

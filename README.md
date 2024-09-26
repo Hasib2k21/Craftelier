@@ -1,16 +1,16 @@
 # crafty_bay
 
 A new Flutter project.
+![image](https://github.com/user-attachments/assets/70cec723-0ddd-4587-af92-a7669baf1183)
 
-## Getting Started
+![image](https://github.com/user-attachments/assets/b1121eb2-93d3-43f7-a432-b8303b3e059e)
 
-This project is a starting point for a Flutter application.
+![image](https://github.com/user-attachments/assets/eefd2520-6a9f-4698-aefd-b5dc1aa1064e)
 
-A few resources to get you started if this is your first Flutter project:
+![image](https://github.com/user-attachments/assets/13da1cfa-e9cc-4f97-918b-aea72d546c4c)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![image](https://github.com/user-attachments/assets/339d5877-565b-4987-8d73-49b89892208c)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+

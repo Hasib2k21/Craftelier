@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:logger/logger.dart';
+
 import 'package:crafty_bay/data/models/network_response.dart';
 import 'package:http/http.dart';
-
+import 'package:logger/web.dart';
 
 class NetworkCaller {
   final Logger logger;
@@ -34,7 +35,7 @@ class NetworkCaller {
         );
       }
     } catch (e) {
-      _responseLog(url, -1, null, {}, true, e);
+      _responseLog(url, -1, null, {}, false, e);
       return NetworkResponse(
         isSuccess: false,
         statusCode: -1,
@@ -75,7 +76,7 @@ class NetworkCaller {
         );
       }
     } catch (e) {
-      _responseLog(url, -1, null, {}, true, e);
+      _responseLog(url, -1, null, {}, false, e);
       return NetworkResponse(
         isSuccess: false,
         statusCode: -1,

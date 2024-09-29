@@ -1,5 +1,7 @@
 import 'package:crafty_bay/presentation/state_holders/bottom_navbar_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/category_list_controller.dart';
 import 'package:crafty_bay/presentation/ui/widget/category_card.dart';
+import 'package:crafty_bay/presentation/ui/widget/home/centered_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +17,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (value){
+      onPopInvoked: (value) {
         backToHome();
       },
       child: Scaffold(
@@ -28,17 +30,35 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
             icon: const Icon(Icons.arrow_back_ios_new_outlined),
           ),
         ),
-        body: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4, childAspectRatio: 0.75),
-            itemCount: 30,
-            itemBuilder: (context, index) {
-              return const CategoryCard();
-            }),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            Get.find<CategoryListController>().getCategoryList();
+          },
+          child: GetBuilder<CategoryListController>(
+              builder: (categoryListController) {
+            if (categoryListController.inProgress) {
+              return const CenteredCircularProgressIndicator();
+            } else if (categoryListController.errorMessage != null) {
+              return Center(
+                child: Text(categoryListController.errorMessage!),
+              );
+            }
+            return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4, childAspectRatio: 0.75),
+                itemCount: categoryListController.categoryList.length,
+                itemBuilder: (context, index) {
+                  return CategoryCard(
+                    categoryModel: categoryListController.categoryList[index],
+                  );
+                });
+          }),
+        ),
       ),
     );
   }
-  void backToHome(){
+
+  void backToHome() {
     Get.find<BottomNavbarController>().backToHome();
   }
 }

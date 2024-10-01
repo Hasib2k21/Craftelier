@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:crafty_bay/presentation/ui/screens/complete_profile_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/auth/complete_profile_screen.dart';
 import 'package:crafty_bay/presentation/ui/widget/app_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../utils/app_colors.dart';
+import '../../utils/app_colors.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   const OTPVerificationScreen({super.key});

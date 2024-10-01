@@ -1,5 +1,5 @@
 import 'package:crafty_bay/data/models/category_model.dart';
-import 'package:crafty_bay/presentation/ui/screens/product_list_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/home/product_list_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

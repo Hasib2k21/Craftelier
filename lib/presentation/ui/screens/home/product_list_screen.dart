@@ -23,7 +23,7 @@ class ProductListScreen extends StatelessWidget {
               mainAxisSpacing: 4
             ),
             itemBuilder: (context, index) {
-              return const ProductCard();
+              //return  ProductCard();
             }),
       ),
     );

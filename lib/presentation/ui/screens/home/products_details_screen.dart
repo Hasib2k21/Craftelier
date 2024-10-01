@@ -1,4 +1,4 @@
-import 'package:crafty_bay/presentation/ui/screens/review_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/home/review_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
 import 'package:crafty_bay/presentation/ui/widget/product_image_slider.dart';
 import 'package:crafty_bay/presentation/ui/widget/size_picker.dart';
@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 import 'package:readmore/readmore.dart';
-import '../widget/color_picker.dart';
+import '../../widget/color_picker.dart';
 
 class ProductsDetailsScreen extends StatefulWidget {
   const ProductsDetailsScreen({super.key});

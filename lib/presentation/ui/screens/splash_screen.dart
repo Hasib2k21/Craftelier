@@ -1,5 +1,5 @@
 import 'package:crafty_bay/presentation/ui/screens/bottom_nav_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/home_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widget/app_logo.dart';

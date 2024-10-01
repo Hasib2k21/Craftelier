@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../state_holders/bottom_navbar_controller.dart';
-import '../utils/app_colors.dart';
-import '../widget/cart_item_widget.dart';
+import '../../../state_holders/bottom_navbar_controller.dart';
+import '../../utils/app_colors.dart';
+import '../../widget/cart_item_widget.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});

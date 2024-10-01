@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../state_holders/bottom_navbar_controller.dart';
-import '../widget/product_card.dart';
+import '../../../state_holders/bottom_navbar_controller.dart';
+import '../../widget/product_card.dart';
 
 class WishListScreen extends StatefulWidget {
   const WishListScreen({super.key});
@@ -39,7 +39,7 @@ class _WishListScreenState extends State<WishListScreen> {
                   crossAxisSpacing: 2,
                   mainAxisSpacing: 4),
               itemBuilder: (context, index) {
-                return const ProductCard();
+               // return const ProductCard();
               }),
         ),
       ),

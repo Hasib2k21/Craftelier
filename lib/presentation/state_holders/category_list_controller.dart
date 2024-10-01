@@ -9,15 +9,13 @@ import '../../data/models/category_model.dart';
 class CategoryListController extends GetxController {
   bool _inProgress = false;
 
-  String? _errorMessage;
-
+  bool get inProgress => _inProgress;
   List<CategoryModel> _categoryList = [];
 
-  String? get errorMessage => _errorMessage;
-
   List<CategoryModel> get categoryList => _categoryList;
+  String? _errorMessage;
 
-  bool get inProgress => _inProgress;
+  String? get errorMessage => _errorMessage;
 
   Future<bool> getCategoryList() async {
     bool isSuccess = false;
@@ -26,10 +24,10 @@ class CategoryListController extends GetxController {
     final NetworkResponse response =
         await Get.find<NetworkCaller>().getRequest(url: Urls.categoryListUrl);
     if (response.isSuccess) {
-      isSuccess = true;
-      _errorMessage = null;
       _categoryList =
           CategoryListModel.fromJson(response.responseData).categoryList ?? [];
+      isSuccess = true;
+      _errorMessage = null;
     } else {
       _errorMessage = response.errorMessage;
     }

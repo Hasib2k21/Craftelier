@@ -1,8 +1,9 @@
 import 'package:crafty_bay/data/models/product_model.dart';
-import 'package:crafty_bay/presentation/ui/screens/home/products_details_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../screens/home/products_details_screen.dart';
 import '../utils/app_colors.dart';
 import '../utils/assets_path.dart';
 
@@ -18,7 +19,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const ProductsDetailsScreen());
+        Get.to(() => ProductDetailsScreen(productId: product.id!,));
       },
       child: Card(
         color: Colors.white,
@@ -45,7 +46,7 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
                Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     Text(
@@ -70,7 +71,7 @@ class ProductCard extends StatelessWidget {
                             Text('${product.star}'),
                           ],
                         ),
-                        Card(
+                        const Card(
                           color: AppColors.themeColor,
                           child: Padding(
                             padding: EdgeInsets.all(4.0),

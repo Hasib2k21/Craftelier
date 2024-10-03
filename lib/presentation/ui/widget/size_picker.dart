@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 class SizePicker extends StatefulWidget {
   final List<String> sizes; // Using String for size values
   final Function(String) onSizeSelected; // Return the selected size as a String
-
+ final String text;
   const SizePicker({
     super.key,
     required this.sizes,
-    required this.onSizeSelected,
+    required this.onSizeSelected, required this.text,
   });
 
   @override
@@ -23,8 +23,7 @@ class _SizePickerState extends State<SizePicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Size',
+        Text(widget.text,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(
@@ -39,17 +38,21 @@ class _SizePickerState extends State<SizePicker> {
                 widget.onSizeSelected(item); // Callback when size is selected
                 setState(() {}); // Update UI
               },
-              child: CircleAvatar(
-                backgroundColor: _selectedSize == item
-                    ? AppColors.themeColor // Highlight selected size
-                    : Colors.grey, // Default color for non-selected
-                child: Text(
-                  item,
-                  style: TextStyle(
-                    color: Colors.white, // Text color
-                    fontWeight: _selectedSize == item
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+              child: SizedBox(
+                height: 50,width: 50,
+                child: CircleAvatar(
+
+                  backgroundColor: _selectedSize == item
+                      ? AppColors.themeColor // Highlight selected size
+                      : Colors.grey, // Default color for non-selected
+                  child: Text(
+                    item,
+                    style: TextStyle(
+                      color: Colors.white, // Text color
+                      fontWeight: _selectedSize == item
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
                   ),
                 ),
               ),

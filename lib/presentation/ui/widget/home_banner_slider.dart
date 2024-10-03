@@ -100,7 +100,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
           },
         );
       }).toList(),
-    );
+     );
   }
 
   Widget _buildCarouselDots(SliderListController sliderListController) {

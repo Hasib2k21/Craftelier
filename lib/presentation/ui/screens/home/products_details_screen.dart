@@ -1,113 +1,101 @@
-import 'package:crafty_bay/presentation/ui/screens/home/review_screen.dart';
+import 'package:crafty_bay/data/models/product_details_model.dart';
+import 'package:crafty_bay/presentation/state_holders/product_details_controller.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
-import 'package:crafty_bay/presentation/ui/widget/product_image_slider.dart';
-import 'package:crafty_bay/presentation/ui/widget/size_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
-import 'package:readmore/readmore.dart';
-import '../../widget/color_picker.dart';
 
-class ProductsDetailsScreen extends StatefulWidget {
-  const ProductsDetailsScreen({super.key});
+import '../../widget/home/centered_circular_progress_indicator.dart';
+import '../../widget/product_image_slider.dart';
+import '../../widget/size_picker.dart';
+
+class ProductDetailsScreen extends StatefulWidget {
+  const ProductDetailsScreen({super.key, required this.productId});
+
+  final int productId;
 
   @override
-  State<ProductsDetailsScreen> createState() => _ProductsDetailsScreenState();
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
-class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Get.find<ProductDetailsController>().getProductDetails(widget.productId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Products Details'),
+        title: const Text('Product Details'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildProductDetails(),
-          ),
-          _buildPriceAndAddToCartSection()
-        ],
-      ),
+      body: GetBuilder<ProductDetailsController>(
+          builder: (productDetailsController) {
+            if (productDetailsController.inProgress) {
+              return const CenteredCircularProgressIndicator();
+            }
+
+            if (productDetailsController.errorMessage != null) {
+              return Center(
+                child: Text(productDetailsController.errorMessage!),
+              );
+            }
+
+            return Column(
+              children: [
+                Expanded(
+                  child: _buildProductDetails(productDetailsController.product!),
+                ),
+                _buildPriceAndAddToCartSection(productDetailsController.product!)
+              ],
+            );
+          }),
     );
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(ProductDetailsModel product) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const ProductImageSlider(),
+          ProductImageSlider(
+            sliderUrls: [
+              product.img1!,
+              product.img2!,
+              product.img3!,
+              product.img4!,
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Asus Best monitor 2024 latest model',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    ItemCount(
-                      initialValue: 1,
-                      minValue: 0,
-                      maxValue: 10,
-                      decimalPlaces: 0,
-                      color: AppColors.themeColor,
-                      onChanged: (value) {},
-                    ),
-                  ],
+                _buildNameAndQuantitySection(product),
+                const SizedBox(height: 4),
+                _buildRatingAndReviewSection(product),
+                const SizedBox(height: 8),
+                // ColorPicker(
+                //   colors: const [
+                //     Colors.red,
+                //     Colors.green,
+                //     Colors.yellow,
+                //     Colors.black,
+                //   ],
+                //   onColorSelected: (color) {},
+                // ),
+                SizePicker(
+                  sizes: product.color!.split(','),
+                  onSizeSelected: (String selectedSize) {}, text: 'Color',
                 ),
-                const SizedBox(
-                  height: 4,
+                const SizedBox(height: 16),
+                SizePicker(
+                  sizes: product.size!.split(','),
+                  onSizeSelected: (String selectedSize) {}, text: 'Size',
                 ),
-                _buildRatingAndReview(),
-                const SizedBox(
-                  height: 8,
-                ),
-                ColorPicker(
-                  colors: const [
-                    Colors.redAccent,
-                    Colors.blueAccent,
-                    Colors.yellowAccent,
-                    Colors.greenAccent,
-                  ],
-                  onColorSelected: (Color) {},
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                SizePicker(sizes: const [
-                  'S',
-                  'M',
-                  'L',
-                  'XL',
-                  'XXL',
-                ], onSizeSelected: (String selectedSize) {}),
-                const SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  'Description',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                const ReadMoreText(
-                  'Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.',
-                  trimMode: TrimMode.Line,
-                  trimLines: 2,
-                  colorClickableText: Colors.pink,
-                  trimCollapsedText: 'Show more',
-                  trimExpandedText: 'Show less',
-                  moreStyle:
-                      TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
+                const SizedBox(height: 16),
+                _buildDescriptionSection(product)
               ],
             ),
           ),
@@ -116,32 +104,77 @@ class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
     );
   }
 
-  Widget _buildRatingAndReview() {
+  Widget _buildDescriptionSection(ProductDetailsModel productDetails) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Description',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          productDetails.product?.shortDes ?? '',
+          style: const TextStyle(color: Colors.black45),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNameAndQuantitySection(ProductDetailsModel productDetails) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            productDetails.product?.title ?? '',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+        ItemCount(
+          initialValue: 1,
+          minValue: 1,
+          maxValue: 20,
+          decimalPlaces: 0,
+          color: AppColors.themeColor,
+          onChanged: (value) {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRatingAndReviewSection(ProductDetailsModel productDetails) {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Wrap(
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Icon(
-              Icons.star,
-              color: Colors.amber,
+            const Icon(Icons.star, color: Colors.amber),
+            Text(
+              '${productDetails.product?.star ?? ''}',
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500, color: Colors.black54),
             ),
-            Text('3'),
           ],
         ),
-        const SizedBox(
-          width: 8,
+        const SizedBox(width: 8),
+        TextButton(
+          onPressed: () {},
+          child: const Text(
+            'Reviews',
+            style: TextStyle(
+                fontWeight: FontWeight.w500, color: AppColors.themeColor),
+          ),
         ),
-        TextButton(onPressed: () {Get.to(()=>ProductReviewsScreen());}, child: const Text('Reviews')),
-        const SizedBox(
-          width: 8,
-        ),
-        const Card(
+        const SizedBox(width: 8),
+        Card(
           color: AppColors.themeColor,
-          child: Padding(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          child: const Padding(
             padding: EdgeInsets.all(4.0),
             child: Icon(
-              Icons.favorite_border_outlined,
+              Icons.favorite_outline_rounded,
               size: 16,
               color: Colors.white,
             ),
@@ -151,39 +184,35 @@ class _ProductsDetailsScreenState extends State<ProductsDetailsScreen> {
     );
   }
 
-  Widget _buildPriceAndAddToCartSection() {
+  Widget _buildPriceAndAddToCartSection(ProductDetailsModel productDetails) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.themeColor.withOpacity(0.1),
-        borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(8),
-          topLeft: Radius.circular(8),
-        ),
-      ),
+          color: AppColors.themeColor.withOpacity(0.1),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(8),
+            topRight: Radius.circular(8),
+          )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Price'),
+              const Text('Price'),
               Text(
-                '\$1600',
-                style: TextStyle(
+                '\$${productDetails.product?.price}',
+                style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.themeColor),
-              ),
+              )
             ],
           ),
           SizedBox(
-            width: 140,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text("Add To Cart"),
-            ),
-          ),
+              width: 140,
+              child: ElevatedButton(
+                  onPressed: () {}, child: const Text('Add To Cart')))
         ],
       ),
     );

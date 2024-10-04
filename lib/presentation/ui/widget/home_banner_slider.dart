@@ -44,11 +44,12 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
   Widget _buildCarouselSlider(SliderListController sliderListController) {
     return CarouselSlider(
       options: CarouselOptions(
-          height: 180,
-          viewportFraction: 1,
-          onPageChanged: (index, reason) {
-            _selectedIndex.value = index;
-          }),
+        height: 180,
+        viewportFraction: 1,
+        onPageChanged: (index, reason) {
+          _selectedIndex.value = index;
+        },
+      ),
       items: sliderListController.sliders.map((slider) {
         return Builder(
           builder: (BuildContext context) {
@@ -56,27 +57,36 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: AppColors.themeColor,
                 borderRadius: BorderRadius.circular(8),
               ),
-              alignment: Alignment.center,
-              child: Row(
+              child: Stack(
                 children: [
-                  const Placeholder(
-                    fallbackWidth: 100,
-                    fallbackHeight: 100,
+                  // Image at the bottom
+                  Positioned(
+                    right: -20,
+                    child: Image.network(
+                      slider.image ?? '',
+                      fit: BoxFit.cover,
+                      height: 180,
+                      width: 500,// Cover the entire space
+                    ),
                   ),
-                  Expanded(
+                  // Content (price and button) on top of the image
+                  Positioned(
+                    top: 20,
+                    left: 10,
+                    bottom: 20,
+
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           slider.price ?? '',
                           textAlign: TextAlign.center,
-                          style:
-                          Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.black,
                             fontWeight: FontWeight.w600,
+
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -90,10 +100,10 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
                             onPressed: () {},
                             child: const Text('Buy now'),
                           ),
-                        )
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             );
@@ -102,6 +112,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
       }).toList(),
     );
   }
+
 
   Widget _buildCarouselDots(SliderListController sliderListController) {
     return ValueListenableBuilder(

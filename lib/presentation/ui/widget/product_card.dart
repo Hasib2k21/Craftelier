@@ -34,13 +34,12 @@ class ProductCard extends StatelessWidget {
                 height: 110,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.themeColor.withOpacity(0.1),
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8)),
-                  image: const DecorationImage(
-                      image: AssetImage(
-                        AssetsPath.monitor,
+                  image: DecorationImage(
+                      image:NetworkImage(
+                        product.image??''
                       ),
                       fit: BoxFit.scaleDown),
                 ),

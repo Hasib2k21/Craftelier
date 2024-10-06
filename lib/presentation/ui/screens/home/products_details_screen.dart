@@ -1,4 +1,5 @@
 import 'package:crafty_bay/data/models/product_details_model.dart';
+import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/product_details_controller.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:item_count_number_button/item_count_number_button.dart';
 import '../../widget/home/centered_circular_progress_indicator.dart';
 import '../../widget/product_image_slider.dart';
 import '../../widget/size_picker.dart';
+import '../auth/email_verification_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.productId});
@@ -212,9 +214,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           SizedBox(
               width: 140,
               child: ElevatedButton(
-                  onPressed: () {}, child: const Text('Add To Cart')))
+                  onPressed: _onTapAddToCart, child: const Text('Add To Cart')))
         ],
       ),
     );
+  }
+  Future<void> _onTapAddToCart() async {
+    bool isLoggedInUser = await Get.find<AuthController>().isLoggedInUser();
+    if (isLoggedInUser) {
+
+    } else {
+      Get.to(() => const EmailVerificationScreen());
+    }
   }
 }

@@ -1,60 +1,27 @@
-import 'package:crafty_bay/data/models/brand_model.dart';
-import 'package:crafty_bay/data/models/category_model.dart';
+import './product_data.dart';
 
 class ProductModel {
-  int? id;
-  String? title;
-  String? shortDes;
-  String? price;
-  int? discount;
-  String? discountPrice;
-  String? image;
-  int? stock;
-  int? star;
-  String? remark;
-  int? categoryId;
-  int? brandId;
-  String? createdAt;
-  String? updatedAt;
-  BrandModel? brand;
-  CategoryModel? category;
+  String? msg;
+  List<ProductData>? data;
 
-  ProductModel(
-      {this.id,
-        this.title,
-        this.shortDes,
-        this.price,
-        this.discount,
-        this.discountPrice,
-        this.image,
-        this.stock,
-        this.star,
-        this.remark,
-        this.categoryId,
-        this.brandId,
-        this.createdAt,
-        this.updatedAt,
-        this.brand,
-        this.category});
+  ProductModel({this.msg, this.data});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    shortDes = json['short_des'];
-    price = json['price'];
-    discount = json['discount'];
-    discountPrice = json['discount_price'];
-    image = json['image'];
-    stock = json['stock'];
-    star = json['star'];
-    remark = json['remark'];
-    categoryId = json['category_id'];
-    brandId = json['brand_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    brand = json['brand'] != null ? BrandModel.fromJson(json['brand']) : null;
-    category = json['category'] != null
-        ? CategoryModel.fromJson(json['category'])
-        : null;
+    msg = json['msg'];
+    if (json['data'] != null) {
+      data = <ProductData>[];
+      json['data'].forEach((v) {
+        data!.add(ProductData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['msg'] = msg;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }

@@ -1,39 +1,73 @@
-import 'package:crafty_bay/data/models/network_response.dart';
-import 'package:crafty_bay/data/models/product_details_model.dart';
-import 'package:crafty_bay/data/services/network_caller.dart';
-import 'package:crafty_bay/data/utils/urls.dart';
+import 'dart:developer';
+import 'dart:ui';
 import 'package:get/get.dart';
+import '../../data/models/network_response.dart';
+import '../../data/models/product_details.dart';
+import '../../data/models/product_details_model.dart';
+import '../../data/services/network_caller.dart';
+import '../../data/utility/urls.dart';
+import '../ui/utility/color_extension.dart';
 
 class ProductDetailsController extends GetxController {
-  bool _inProgress = false;
+  bool _getProductDetailsIsInProgress = false;
+  ProductDetails _productDetails = ProductDetails();
+  final List<Color> _availableColors = [];
+  List<String> _availableColorsAsString = [];
+  List<String>? _availableSizes;
+  String _errorMessage = '';
 
-  bool get inProgress => _inProgress;
-
-  ProductDetailsModel? _productModel;
-
-  ProductDetailsModel? get product => _productModel;
-
-  String? _errorMessage;
-
-  String? get errorMessage => _errorMessage;
+  bool get getProductDetailsIsInProgress => _getProductDetailsIsInProgress;
+  ProductDetails get productDetails => _productDetails;
+  List<Color> get availableColors => _availableColors;
+  List<String> get availableColorsAsString => _availableColorsAsString;
+  List<String>? get availableSizes => _availableSizes;
+  String get errorMessage => _errorMessage;
 
   Future<bool> getProductDetails(int productId) async {
-    bool isSuccess = false;
-    _inProgress = true;
+    _getProductDetailsIsInProgress = true;
     update();
-    final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(
-      url: Urls.productDetailsByID(productId),
-    );
 
-    if (response.isSuccess) {
-      _productModel = ProductDetailsModel.fromJson(response.responseData['data'][0]);
-      isSuccess = true;
-      _errorMessage = null;
-    } else {
-      _errorMessage = response.errorMessage;
-    }
-    _inProgress = false;
+    final NetworkResponse networkResponse =
+        await NetworkCaller().getRequest(Urls.productDetailsById(productId));
+    _getProductDetailsIsInProgress = false;
     update();
-    return isSuccess;
+
+    if (networkResponse.isSuccess) {
+      _productDetails =
+          ProductDetailsModel.fromJson(networkResponse.responseJson ?? {})
+              .data!
+              .first;
+      log('----------');
+      log(_productDetails.id.toString());
+      _availableColorsAsString = _productDetails.color?.split(',') ?? [];
+      _convertStringToSizes(_productDetails.size ?? '');
+      update();
+      return true;
+    } else {
+      _errorMessage = 'Product details data get failed!';
+      update();
+      return false;
+    }
+  }
+
+  List<String> get images {
+    return [
+      _productDetails.img1 ?? '',
+      _productDetails.img2 ?? '',
+      _productDetails.img3 ?? '',
+      _productDetails.img4 ?? ''
+    ];
+  }
+
+  void _convertStringToColors(String hexColors) {
+    final List<String> splitColors = hexColors.split(',');
+    _availableColors.clear();
+    for (int i = 0; i < splitColors.length; i++) {
+      _availableColors.add(HexColor.fromHex(splitColors[i]));
+    }
+  }
+
+  void _convertStringToSizes(String sizes) {
+    _availableSizes = sizes.split(',');
   }
 }

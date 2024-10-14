@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
-import 'app.dart';
 
-void main() {
-  runApp(const CraftyBayApp());
+import 'package:flutter/material.dart';
+
+import 'application/app.dart';
+
+void main(){
+  runApp(const CraftyBay());
 }

@@ -1,52 +1,65 @@
-import 'package:crafty_bay/data/models/network_response.dart';
-import 'package:crafty_bay/data/services/network_caller.dart';
-import 'package:crafty_bay/data/utils/urls.dart';
+import 'dart:developer';
 import 'package:get/get.dart';
+import '../../data/models/network_response.dart';
+import '../../data/services/network_caller.dart';
+import '../../data/utility/urls.dart';
+import './auth_controller.dart';
 
 class OtpVerificationController extends GetxController {
-  bool _inProgress = false;
-  String? _errorMessage;
+  bool _otpVerificationInProgress = false;
+  String _errorMessage = '';
+  String _tempToken = '';
 
-  bool get inProgress => _inProgress;
-  String? get errorMessage => _errorMessage;
+  bool get otpVerificationInProgress => _otpVerificationInProgress;
+  String get errorMessage => _errorMessage;
+  String get tempToken => _tempToken;
 
-  Future<bool> verifyOtp(String email, String otp) async {
-    bool isSuccess = false;
-    _inProgress = true;
+  Future<bool> verifyOtp({required String email, required String otp}) async {
+    late bool isSuccess;
+    _otpVerificationInProgress = true;
     update();
-    final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(
-      url: Urls.verifyOtp(email, otp),
-    );
-    if (response.isSuccess && response.responseData['msg'] == 'success') {
-      _errorMessage = null;
+    final NetworkResponse response =
+        await NetworkCaller().getRequest(Urls.verifyOtp(email, otp));
+    _otpVerificationInProgress = false;
+    update();
+
+    if (response.isSuccess) {
+      _tempToken = response.responseJson!['data'];
       isSuccess = true;
     } else {
-      _errorMessage = response.errorMessage;
+      _errorMessage = 'OTP verification failed!';
+      isSuccess = false;
     }
-
-    _inProgress = false;
     update();
     return isSuccess;
   }
 
-  // Add the resendOtp method
-  Future<bool> resendOtp(String email, String otp) async {
-    bool isSuccess = false;
-    _inProgress = true;
+  Future<bool> readUserProfile() async {
+    late bool isSuccess;
+    _otpVerificationInProgress = true;
     update();
-    final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(
-      url: Urls.resendOtp(email, otp),  // Now uses both email and otp
+    log(_tempToken.toString());
+    await Future<void>.delayed(const Duration(seconds: 3));
+    final NetworkResponse response = await NetworkCaller().getRequest(
+      Urls.readProfile,
+      loginRequired: true,
+      tempToken: _tempToken,
     );
-    if (response.isSuccess && response.responseData['msg'] == 'OTP resent successfully') {
-      _errorMessage = null;
-      isSuccess = true;
-    } else {
-      _errorMessage = response.errorMessage;
-    }
+    _otpVerificationInProgress = false;
+    update();
 
-    _inProgress = false;
+    if (response.isSuccess) {
+      if (response.responseJson!['data'] != null) {
+        await AuthController.setAccessToken(_tempToken);
+        isSuccess = true;
+      } else {
+        isSuccess = false;
+      }
+    } else {
+      _errorMessage = 'Failed to get profile data!';
+      isSuccess = false;
+    }
     update();
     return isSuccess;
   }
-
 }

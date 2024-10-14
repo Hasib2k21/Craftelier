@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../state_holders/bottom_navbar_controller.dart';
-import '../../utils/app_colors.dart';
-import '../../widget/cart_item_widget.dart';
+import '../../../state_holders/cart_controller.dart';
+import '../../../state_holders/main_bottom_nav_controller.dart';
+import '../../widgets/product_cart_item.dart';
+import '../checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -13,86 +14,119 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<CartController>().getCart();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (value) {
-        backToHome();
+    final ThemeData theme = Theme.of(context);
+
+    return WillPopScope(
+      onWillPop: () async {
+        Get.find<MainBottomNavController>().backToHomeScreen();
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
-            title: const Text(
-              "Carts",
-              style: TextStyle(color: Colors.black),
-            ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () {
-                Get.find<BottomNavbarController>().backToHome();
-              },
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-            )),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                  itemCount: 10,
-                  itemBuilder: (context, index){
-                    return const CartItemWidget();
-                  }, separatorBuilder: (_,__ ) =>const SizedBox(height: 8,),
-              ),
-            ),
-            _buildProductAddToCartSection()
-          ],
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: const BackButton(color: Colors.black54),
+          title: const Text(
+            'Cart',
+            style: TextStyle(color: Colors.black54),
+          ),
+        ),
+        body: GetBuilder<CartController>(
+          builder: (cartController) {
+            if (cartController.getCartIsInProgress) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            } else if (cartController.cartModel.data?.isEmpty ?? true) {
+              return Center(
+                child: Text(
+                  'Empty Cart List.',
+                  style: theme.textTheme.displaySmall?.copyWith(fontSize: 20),
+                ),
+              );
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cartController.cartModel.data?.length ?? 0,
+                    itemBuilder: (cntx, index) {
+                      return ProductCartItem(
+                        theme: theme,
+                        cartData: cartController.cartModel.data![index],
+                        onDelete: () async {
+                          await cartController.deleteCart(
+                              cartController.cartModel.data![index].productId!);
+                        },
+                        onChangeProductQuantity: (int productId, int quantity) {
+                          cartController.changeProductQuantityInCart(
+                              productId, quantity);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                productCheckout(theme, cartController.totalPrice),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-Widget _buildProductAddToCartSection() {
+  Container productCheckout(ThemeData theme, double totalPrice) {
     return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-                color: AppColors.themeColor.withOpacity(0.1),
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    topLeft: Radius.circular(16))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Price",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "\$240",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.themeColor),
-                    )
-                  ],
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: theme.primaryColor.withOpacity(0.1),
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(15),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Total Price',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
                 ),
-                SizedBox(
-                    width: 120,
-                    child: ElevatedButton(
-                        onPressed: () {}, child: const Text("Checkout")))
-              ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                totalPrice.toStringAsFixed(1),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 140,
+            child: ElevatedButton(
+              onPressed: () {
+                Get.to(() => const CheckoutScreen());
+              },
+              child: const Text('Checkout'),
             ),
-          );
-  }
-  void backToHome(){
-    Get.find<BottomNavbarController>().backToHome();
+          ),
+        ],
+      ),
+    );
   }
 }

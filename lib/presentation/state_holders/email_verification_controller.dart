@@ -1,31 +1,28 @@
-import 'package:crafty_bay/data/models/network_response.dart';
-import 'package:crafty_bay/data/services/network_caller.dart';
-import 'package:crafty_bay/data/utils/urls.dart';
 import 'package:get/get.dart';
+import '../../data/models/network_response.dart';
+import '../../data/services/network_caller.dart';
+import '../../data/utility/urls.dart';
 
 class EmailVerificationController extends GetxController {
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
+  bool _emailVerificationInProgress = false;
+  String _message = '';
 
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+  bool get emailVerificationInProgress => _emailVerificationInProgress;
+  String get message => _message;
 
   Future<bool> verifyEmail(String email) async {
-    bool isSuccess = false;
-    _inProgress = true;
+    _emailVerificationInProgress = true;
     update();
-    final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(
-      url: Urls.verifyEmail(email),
-    );
-    if (response.isSuccess && response.responseData['msg'] == 'success') {
-      _errorMessage = null;
-      isSuccess = true;
-    } else {
-      _errorMessage = response.errorMessage;
-    }
+    final NetworkResponse response =
+        await NetworkCaller().getRequest(Urls.verifyEmail(email));
+    _emailVerificationInProgress = false;
+    update();
 
-    _inProgress = false;
-    update();
-    return isSuccess;
+    if (response.isSuccess) {
+      _message = response.responseJson?['data'] ?? '';
+      return true;
+    } else {
+      return false;
+    }
   }
 }
